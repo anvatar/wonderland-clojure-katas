@@ -2,6 +2,18 @@
   (:require [clojure.test :refer :all]
             [alphabet-cipher.coder :refer :all]))
 
+(deftest test-encode-table
+  (testing
+    (is (= \a
+           (get encode-table [\a \a])))
+    (is (= \c
+           (get encode-table [\b \b])))
+    (is (= \y
+           (get encode-table [\z \z])))
+    (is (= \e
+           (get encode-table [\m \s])))
+  ))
+      
 (deftest test-encode
   (testing "can encode a message with a secret keyword"
     (is (= "hmkbxebpxpmyllyrxiiqtoltfgzzv"
