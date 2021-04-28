@@ -20,7 +20,13 @@
               message)))
 
 (defn decode [keyword message]
-  "decodeme")
+  (apply str
+         (map #(-> (filter (fn [[[r _] x]] (and (= r %1) (= x %2))) encode-table)
+                   first
+                   first
+                   second)
+              (apply concat (repeat keyword))
+              message)))
 
 (defn decipher [cipher message]
   "decypherme")
