@@ -4,7 +4,7 @@
 
 (def encode-rows
   (map seq
-       (iterate (fn [row] (str (subs row 1) (subs row 0 1)))
+       (iterate #(str (subs % 1) (subs % 0 1))
                 alphabet)))
 
 (def encode-table
@@ -17,7 +17,7 @@
   (apply str
          (map (fn [r c] (get encode-table [r c]))
               (apply concat (repeat keyword))
-              (seq message))))
+              message)))
 
 (defn decode [keyword message]
   "decodeme")
