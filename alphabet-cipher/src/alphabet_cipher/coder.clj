@@ -8,10 +8,10 @@
                 alphabet)))
 
 (def encode-table
-(into {} (for [[r row] (zipmap alphabet encode-rows)
-      [c letter] (zipmap alphabet row)]
-  [[r c] letter]
-)))
+  (into {}
+        (for [[r row] (zipmap alphabet encode-rows)
+              [c letter] (zipmap alphabet row)]
+             [[r c] letter])))
 
 (defn encode [keyword message]
   (apply str
