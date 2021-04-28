@@ -28,6 +28,16 @@
               (apply concat (repeat keyword))
               message)))
 
-(defn decipher [cipher message]
-  "decypherme")
+(defn shortest-prefix [stretched]
+  (last (filter #(= (take (count stretched) (apply concat (repeat %))) stretched)
+                (take-while not-empty (iterate #(drop-last %) stretched)))))
 
+(defn decipher [cipher message]
+  (apply str
+         (shortest-prefix
+           (map #(-> (filter (fn [[[_ c] x]] (and (= c %1) (= x %2))) encode-table)
+                     first
+                     first
+                     first)
+                message
+                cipher))))
