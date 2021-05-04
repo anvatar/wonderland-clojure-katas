@@ -3,6 +3,22 @@
             [fox-goose-bag-of-corn.puzzle :refer :all]
             [clojure.set]))
 
+(deftest test-moves-to-boat
+  (testing
+    (is (= [
+             [#{:fox :corn} #{:you :goose :boat}]
+             [#{:fox :goose :corn} #{:you :boat}]
+           ]
+           (moves-to-boat [:fox :goose :corn :you] [:boat])))))
+
+(deftest test-move-from-boat
+  (testing
+    (is (= [#{:boat} #{:goose :you}]
+           (move-from-boat [:boat :goose :you] []))))
+  (testing
+    (is (= [#{:boat} #{:goose :you}]
+           (move-from-boat [:boat :you] [:goose])))))
+
 (defn validate-move [step1 step2]
   (testing "only you and another thing can move"
     (let [diff1 (clojure.set/difference step1 step2)

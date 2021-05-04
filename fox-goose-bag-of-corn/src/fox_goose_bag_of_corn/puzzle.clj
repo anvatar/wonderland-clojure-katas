@@ -19,5 +19,17 @@
    [[] [:boat :goose :you] [:corn :fox]]
    [[] [:boat] [:corn :fox :goose :you]]])
 
+(defn moves-to-boat [bank boat]
+  (remove (fn [[bs _]]
+            (or (= (set bs) #{:fox :goose})
+                (= (set bs) #{:goose :corn})))
+          (map (fn [ms]
+                 [(set (remove ms bank))
+                  (set (concat ms boat))])
+               (map (fn [b] (into #{} [b :you])) bank))))
+
+(defn move-from-boat [boat bank]
+  [#{:boat} (set (concat bank (remove #{:boat} boat)))])
+
 (defn river-crossing-plan []
   the-solution)
