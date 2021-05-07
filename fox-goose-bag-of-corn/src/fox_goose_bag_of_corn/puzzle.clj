@@ -31,5 +31,22 @@
 (defn move-from-boat [boat bank]
   [#{:boat} (set (concat bank (remove #{:boat} boat)))])
 
+(def travels
+  (let [left-boat (fn [l b r] (for [[nl nb] (moves-to-boat l b)] [nl nb r]))
+        boat-right (fn [l b r] (let [[nb nr] (move-from-boat b r)] [[l nb nr]]))
+        right-boat (fn [l b r] (for [[nr nb] (moves-to-boat r b)] [l nb nr]))
+        boat-left (fn [l b r] (let [[nb nl] (move-from-boat b l)] [[nl nb r]]))]
+    (cycle [left-boat boat-right right-boat boat-left])))
+
 (defn river-crossing-plan []
-  the-solution)
+  (loop [queue [[[[#{:fox :goose :corn :you} #{:boat} #{}]] travels]]]
+    (let [[paths ts] (first queue)
+          current (last paths)
+          travel (first ts)]
+      (if (= (count (last current)) 4)
+        paths
+        (recur (apply conj
+                      (rest queue)
+                      (for [next (apply travel current)
+                            :when (not ((set paths) next))]
+                        [(conj paths next) (rest ts)])))))))
