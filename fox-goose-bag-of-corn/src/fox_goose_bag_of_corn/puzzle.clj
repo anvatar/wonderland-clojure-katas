@@ -1,6 +1,6 @@
 (ns fox-goose-bag-of-corn.puzzle)
 
-(def start-pos [[[:fox :goose :corn :you] [:boat] []]])
+(def start-pos [[#{:fox :goose :corn :you} #{:boat} #{}]])
 
 (defn moves-to-boat [bank boat]
   (remove (fn [[bs _]]
@@ -22,7 +22,7 @@
     (cycle [left-boat boat-right right-boat boat-left])))
 
 (defn river-crossing-plan []
-  (loop [queue [[[[#{:fox :goose :corn :you} #{:boat} #{}]] travels]]]
+  (loop [queue [[start-pos travels]]]
     (let [[paths ts] (first queue)
           current (last paths)
           travel (first ts)]
