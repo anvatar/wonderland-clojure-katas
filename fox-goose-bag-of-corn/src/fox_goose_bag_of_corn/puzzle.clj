@@ -4,11 +4,12 @@
 (def start-pos [[#{:fox :goose :corn :you} #{:boat} #{}]])
 
 (defn moves-to-boat [bank boat]
-  (remove (fn [[bs _]]
-            (#{#{:fox :goose} #{:goose :corn}} bs))
-          (map #(vector (clojure.set/difference bank %)
-                        (clojure.set/union boat %))
-               (map #(into #{} [% :you]) bank))))
+  (for [p bank
+        :let [ps (into #{} [p :you])
+              new-bank (clojure.set/difference bank ps)
+              new-boat (clojure.set/union boat ps)]
+        :when (not (#{#{:fox :goose} #{:goose :corn}} new-bank))]
+    [new-bank new-boat]))
 
 (defn move-from-boat [boat bank]
   [#{:boat} (clojure.set/union bank (clojure.set/difference boat #{:boat}))])
