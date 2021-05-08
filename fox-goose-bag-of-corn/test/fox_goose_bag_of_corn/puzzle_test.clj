@@ -6,18 +6,18 @@
 (deftest test-moves-to-boat
   (testing
     (is (= [
-             [#{:fox :corn} #{:you :goose :boat}]
              [#{:fox :goose :corn} #{:you :boat}]
+             [#{:fox :corn} #{:you :goose :boat}]
            ]
-           (moves-to-boat [:fox :goose :corn :you] [:boat])))))
+           (moves-to-boat #{:fox :goose :corn :you} #{:boat})))))
 
 (deftest test-move-from-boat
   (testing
     (is (= [#{:boat} #{:goose :you}]
-           (move-from-boat [:boat :goose :you] []))))
+           (move-from-boat #{:boat :goose :you} #{}))))
   (testing
     (is (= [#{:boat} #{:goose :you}]
-           (move-from-boat [:boat :you] [:goose])))))
+           (move-from-boat #{:boat :you} #{:goose})))))
 
 (defn validate-move [step1 step2]
   (testing "only you and another thing can move"
