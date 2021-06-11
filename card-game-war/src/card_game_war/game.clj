@@ -8,6 +8,37 @@
         rank ranks]
     [suit rank]))
 
-(defn play-round [player1-card player2-card])
+(def ^:private rank-to-index
+  (let [indexes (zipmap ranks (range))]
+    #(get indexes %)))
 
-(defn play-game [player1-cards player2-cards])
+(defn play-round [[_ rank0] [_ rank1]]
+  (let [[index0 index1] (map rank-to-index [rank0 rank1])]
+    (cond (> index0 index1) 0
+          (< index0 index1) 1
+          :else nil)))
+
+(defn- show-cards [cards]
+  (println (take 5 cards) " (total " (count cards) " cards)"))
+
+(defn play-game [player0-cards player1-cards]
+  (loop [cards0 player0-cards
+         cards1 player1-cards
+         war-cards []]
+    (println "-----")
+    (doall (map show-cards [cards0 cards1 war-cards]))
+
+    (cond (every? empty? [cards0 cards1]) nil
+          (empty? cards1) 0
+          (empty? cards0) 1
+          :else (let [winner-cards #(shuffle (concat war-cards (map first [cards0 cards1])))]
+                  (case (play-round (first cards0) (first cards1))
+                    0 (recur (concat (rest cards0) (winner-cards))
+                             (rest cards1)
+                             [])
+                    1 (recur (rest cards0)
+                             (concat (rest cards1) (winner-cards))
+                             [])
+                    nil (recur (drop 4 cards0)
+                               (drop 4 cards1)
+                               (concat war-cards (take 4 cards0) (take 4 cards1))))))))
