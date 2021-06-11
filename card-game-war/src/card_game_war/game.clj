@@ -31,13 +31,14 @@
     (cond (every? empty? [cards0 cards1]) nil
           (empty? cards1) 0
           (empty? cards0) 1
-          :else (case (play-round (first cards0) (first cards1))
-                  0 (recur (concat (rest cards0) (shuffle (concat war-cards (map first [cards0 cards1]))))
-                           (rest cards1)
-                           [])
-                  1 (recur (rest cards0)
-                           (concat (rest cards1) (shuffle (concat war-cards (map first [cards0 cards1]))))
-                           [])
-                  nil (recur (drop 4 cards0)
-                             (drop 4 cards1)
-                             (concat war-cards (take 4 cards0) (take 4 cards1)))))))
+          :else (let [winner-cards #(shuffle (concat war-cards (map first [cards0 cards1])))]
+                  (case (play-round (first cards0) (first cards1))
+                    0 (recur (concat (rest cards0) (winner-cards))
+                             (rest cards1)
+                             [])
+                    1 (recur (rest cards0)
+                             (concat (rest cards1) (winner-cards))
+                             [])
+                    nil (recur (drop 4 cards0)
+                               (drop 4 cards1)
+                               (concat war-cards (take 4 cards0) (take 4 cards1))))))))
