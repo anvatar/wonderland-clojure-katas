@@ -8,9 +8,12 @@
         rank ranks]
     [suit rank]))
 
+(def ^:private rank-to-index
+  (let [indexes (zipmap ranks (range))]
+    #(get indexes %)))
+
 (defn play-round [[_ rank0] [_ rank1]]
-  (let [indexes (zipmap ranks (range))
-        [index0 index1] (map #(get indexes %) [rank0 rank1])]
+  (let [[index0 index1] (map rank-to-index [rank0 rank1])]
     (cond (> index0 index1) 0
           (< index0 index1) 1
           :else nil)))
